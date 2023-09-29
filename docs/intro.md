@@ -3,46 +3,75 @@ sidebar_label: "Introduction"
 sidebar_position: 1
 ---
 
-# Tutorial Intro
+# Introduction
 
-Let's discover **Docusaurus in less than 5 minutes**.
+Let's try to understand why do we need one more selectors language if we already have XPath and CSS selectors.
 
-## Getting Started
+## What is wrong with CSS selectors?
 
-Get started by **creating a new site**.
+CSS selectors are nice. But not powerful.
+Two major feature missing are:
 
-Or **try Docusaurus immediately** with **[docusaurus.new](https://docusaurus.new)**.
+- Search elements by text
+- Search elements with specific inner elements
 
-### What you'll need
+Search by text is a must have feature for UI automation. Search by inner elements is very useful when we work with the lists.  
+Imagine we have the following component on the page.
 
-- [Node.js](https://nodejs.org/en/download/) version 16.14 or above:
-  - When installing Node.js, you are recommended to check all checkboxes related to dependencies.
-
-## Generate a new site
-
-Generate a new Docusaurus site using the **classic template**.
-
-The classic template will automatically be added to your project after you run the command:
-
-```bash
-npm init docusaurus@latest my-website classic
+```html title="contacts.component.html"
+<ul id="contacts">
+  <li>
+    <span>Rebekah</span>
+    <>...</>
+    <button class="send-button">Send</button>
+  </li>
+  <li>
+    <span>Marina</span>
+    <>...</>
+    <button class="send-button">Send</button>
+  </li>
+</ul>
 ```
 
-You can type this command into Command Prompt, Powershell, Terminal, or any other integrated terminal of your code editor.
+Our task is to send message to _Rebekah_. To do that we need to find the corresponding _Send_ button.  
+We could easily find all buttons.
 
-The command also installs all necessary dependencies you need to run Docusaurus.
-
-## Start your site
-
-Run the development server:
-
-```bash
-cd my-website
-npm run start
+```title="CSS"
+#contacts .send-button
 ```
 
-The `cd` command changes the directory you're working with. In order to work with your newly created Docusaurus site, you'll need to navigate the terminal there.
+But if we want to find the button for the specific user, CSS selectors will not be able to help.
 
-The `npm run start` command builds your website locally and serves it through a development server, ready for you to view at http://localhost:3000/.
+## What is wrong with XPath?
 
-Open `docs/intro.md` (this page) and edit some lines: the site **reloads automatically** and displays your changes.
+Let's try to use XPath to solve the previous task.
+
+```title="XPath"
+//*[@id='contacts']/descendant::li[descendant::span[text()[normalize-space(.)='Rebekah']]]/descendant::*[contains(@class,'send-button')]
+```
+
+This selector will return one element, exactly the one that we want to click.
+This is achieved thanks to ability of XPath to search by text and to verify inner elements.  
+So, XPath is very poweful. But, it is wordy and not easy to read and understand. It is not adapted for HTML and does not have special sintax for the features we use the most in automated tests like search by ids and classes.
+
+## How could we improve CSS selectors?
+
+What if we could use this kind of sintax to searh by text in CSS selectors
+
+```title="Search by text in XCSS"
+li span['Rebekah']
+```
+
+And search by inner elements like this
+
+```title="Search by inner element in XCSS"
+li[span['Rebekah']]
+```
+
+Then our selector for the _Send_ button would be
+
+```title="XCSS selector for Send button"
+#contacts li[span['Rebekah']] .send-button
+```
+
+The goal of XCSS is to add functionality of XPath to CSS selectors. It does not add any new features compared to XPath, but simplifies creating selectors by making CSS more powerful.
