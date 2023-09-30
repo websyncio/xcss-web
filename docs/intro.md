@@ -10,12 +10,12 @@ Let's try to understand why do we need one more selectors language if we already
 ## What is wrong with CSS selectors?
 
 CSS selectors are nice. But not powerful.
-Two major feature missing are:
+Two major missing features are:
 
 - Search elements by text
 - Search elements with specific inner elements
 
-Search by text is a must have feature for UI automation. Search by inner elements is very useful when we work with the lists.  
+Search by text is a must have for UI automation. Search by inner elements is very useful when we work with the lists.  
 Imagine we have the following component on the page.
 
 ```html title="contacts.component.html"
@@ -23,7 +23,9 @@ Imagine we have the following component on the page.
   <li>
     <span>Rebekah</span>
     <>...</>
+    // highlight-start
     <button class="send-button">Send</button>
+    // highlight-end
   </li>
   <li>
     <span>Marina</span>
@@ -33,7 +35,7 @@ Imagine we have the following component on the page.
 </ul>
 ```
 
-Our task is to send message to _Rebekah_. To do that we need to find the corresponding _Send_ button.  
+Lets say that our task is to send message to _Rebekah_. To do that we need to find the corresponding _Send_ button.  
 We could easily find all buttons.
 
 ```title="CSS"
